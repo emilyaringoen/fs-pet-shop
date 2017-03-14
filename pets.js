@@ -1,3 +1,4 @@
+#!/usr/local/bin/node
 'use strict'
 
 const fs = require('fs')
@@ -70,6 +71,25 @@ else if (cmd === 'update') {
 
       fs.writeFile('pets.json', petJSON, (err) => {
         console.log(updatedPet);
+      })
+    }
+  })
+}
+else if (cmd === 'destroy') {
+  fs.readFile('pets.json', 'utf8', (err, data) => {
+    if (err) throw error
+    else if (process.argv.length !== 4) {
+      console.error(`Usage: node pets.js destroy INDEX`);
+      process.exit(1)
+    }
+    else {
+      let petArray = JSON.parse(data)
+      let petGone = petArray.splice(index, 1)
+      let petJSON = JSON.stringify(petArray)
+
+      fs.writeFile('pets.json', petJSON, (err) => {
+        if (err) throw err
+        console.log(petGone[0]);
       })
     }
   })
