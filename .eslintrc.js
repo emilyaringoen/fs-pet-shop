@@ -12,5 +12,8 @@ module.exports = {
         "quotes": "off",
         "no-unused-vars": "off",
         "no-else-return": "off",
+        "no-console": "off",
+        "no-undef": "off",
+        "curly": "off"
     }
 };
