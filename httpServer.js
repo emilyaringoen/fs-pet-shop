@@ -6,57 +6,44 @@ const fs = require('fs')
 let port = 8000
 
 const server = http.createServer((req, res) => {
-  if (req.method === 'GET') {
-    if (req.url === '/pets') {
-      fs.readFile('pets.json', 'utf8', (err, petsJSON) => {
-        if (err) {
-          console.error(err.stack);
-          res.statusCode = 500;
-          res.setHeader('Content-Type', 'text/plain');
-          return res.end('Internal Server Error');
-        } else {
-          res.statusCode = 200
-          res.setHeader('Content-Type', 'application/json')
-          res.end(petsJSON)
-        }
-      })
-    } else if (req.url === '/pets/0') {
-      fs.readFile('pets.json', 'utf8', (err, petsJSON) => {
-        if (err) {
-          console.error(err.stack);
-          res.statusCode = 500;
-          res.setHeader('Content-Type', 'text/plain');
-          return res.end('Internal Server Error');
-        } else {
-          res.statusCode = 200
-          res.setHeader('Content-Type', 'application/json')
-          let pets0 = JSON.parse(petsJSON)[0]
-          res.end(JSON.stringify(pets0))
-        }
-      })
-    } else if (req.url === '/pets/1') {
-      fs.readFile('pets.json', 'utf8', (err, petsJSON) => {
-        if (err) {
-          console.error(err.stack);
-          res.statusCode = 500;
-          res.setHeader('Content-Type', 'text/plain');
-          return res.end('Internal Server Error');
-        } else {
-          res.statusCode = 200
-          res.setHeader('Content-Type', 'application/json')
-          let pets1 = JSON.parse(petsJSON)[1]
-          res.end(JSON.stringify(pets1))
-        }
-      })
+  let pathName = url.parse(req.url).pathname
+  let pathArr = pathName.match(/[^/]+/g);
+
+  fs.readFile('pets.json', 'utf8', (err, data) => {
+
+    if (err) throw err;
+    else if (pathArr.length === 0) {
+      console.error(err.stack);
+      res.statusCode = 404;
+      res.setHeader('Content-Type', 'text/plain');
+
+      return res.end('Internal Server Error');
+    }
+    else if (pathArr.length === 1 && pathArr[0] === 'pets') {
+      let petArr = JSON.parse(data)
+      res.statusCode = 200
+      res.setHeader('Content-Type', 'application/json')
+      res.end(JSON.stringify(petArr))
+    }
+    else if (pathArr[1] == 0 && pathArr[0] === 'pets') {
+      let pet0 = JSON.parse(data)[0]
+      res.statusCode = 200
+      res.setHeader('Content-Type', 'application/json')
+      res.end(JSON.stringify(pet0))
+    }
+    else if (pathArr[1] == 1 && pathArr[0] === 'pets') {
+      let pet1 = JSON.parse(data)[1]
+      res.statusCode = 200
+      res.setHeader('Content-Type', 'application/json')
+      res.end(JSON.stringify(pet1))
     }
     else {
       res.statusCode = 404;
       res.setHeader('Content-Type', 'text/plain');
       res.end('Not Found');
     }
-  }
+  })
 })
-
 
 server.listen(port, (err) => {
   console.log('Listening on port', port);
