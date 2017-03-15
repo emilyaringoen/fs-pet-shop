@@ -14,6 +14,7 @@ module.exports = {
         "no-else-return": "off",
         "no-console": "off",
         "no-undef": "off",
-        "curly": "off"
+        "curly": "off",
+        "brace-style": "off"
     }
 };
