@@ -33,7 +33,6 @@ app.get('/pets/:id', (req, res) => {
     if (id < 0 || id >= pets.length || Number.isNaN(id)) {
       return res.sendStatus(404)
     }
-
     res.send(pets[id])
   })
 })
@@ -45,3 +44,5 @@ app.use((req, res) => {
 app.listen(port, function() {
   console.log('Listening on port', port);
 });
+
+module.exports = app;
